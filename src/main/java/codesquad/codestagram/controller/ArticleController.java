@@ -1,5 +1,6 @@
 package codesquad.codestagram.controller;
 
+import codesquad.codestagram.constants.Constants;
 import codesquad.codestagram.domain.Article;
 import codesquad.codestagram.domain.User;
 import codesquad.codestagram.dto.ArticleForm;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class ArticleController {
@@ -34,8 +37,20 @@ public class ArticleController {
             page = 1;
         }
         page -= 1; // 내부 페이지는 0부터 시작
-        Page<Article> articleList = articleService.findArticlesByPage(page);
-        model.addAttribute("articleList", articleList);
+
+        Page<Article> articlePage = articleService.findArticlesByPage(page);
+        int totalPages = articlePage.getTotalPages();
+
+        int currentBlock = page / Constants.ARTICLE_PAGE_BLOCK_SIZE;
+        int startPage = currentBlock * Constants.ARTICLE_PAGE_BLOCK_SIZE + 1;
+        int endPage = Math.min(startPage + Constants.ARTICLE_PAGE_BLOCK_SIZE - 1, totalPages);
+
+        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+                .boxed()
+                .collect(Collectors.toList());
+
+        model.addAttribute("articleList", articlePage);
+        model.addAttribute("pageNumbers", pageNumbers);
         return "index";
     }
 
