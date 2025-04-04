@@ -51,6 +51,10 @@ public class ArticleController {
 
         model.addAttribute("articleList", articlePage);
         model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("hasPrevBlock", startPage > 1);
+        model.addAttribute("hasNextBlock", endPage < totalPages);
+        model.addAttribute("prevBlockPage", startPage - 1);
+        model.addAttribute("nextBlockPage", endPage + 1);
         return "index";
     }
 

@@ -42,11 +42,15 @@
               <div class="col-md-3"></div>
               <div class="col-md-6 text-center">
                   <ul class="pagination center-block" style="display:inline-block;">
-                      <li><a href="#">«</a></li>
+                      {{#hasPrevBlock}}
+                      <li><a href="/home?page={{prevBlockPage}}">«</a></li>
+                      {{/hasPrevBlock}}
                       {{#pageNumbers}}
                       <li><a href="/home?page={{.}}">{{.}}</a></li>
                       {{/pageNumbers}}
-                      <li><a href="#">»</a></li>
+                      {{#hasNextBlock}}
+                      <li><a href="/home?page={{nextBlockPage}}">»</a></li>
+                      {{/hasNextBlock}}
                 </ul>
               </div>
               <div class="col-md-3 qna-write">
