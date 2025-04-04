@@ -7,6 +7,7 @@ import codesquad.codestagram.dto.ReplyViewDto;
 import codesquad.codestagram.service.ArticleService;
 import codesquad.codestagram.utility.TextUtility;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,16 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Article> articleList = articleService.findAllArticles();
+        return "redirect:/home";
+    }
+
+    @GetMapping("/home")
+    public String home(@RequestParam(defaultValue = "1") int page, Model model) {
+        if (page < 1) {
+            page = 1;
+        }
+        page -= 1; // 내부 페이지는 0부터 시작
+        Page<Article> articleList = articleService.findArticlesByPage(page);
         model.addAttribute("articleList", articleList);
         return "index";
     }

@@ -1,5 +1,6 @@
 package codesquad.codestagram.service;
 
+import codesquad.codestagram.constants.Constants;
 import codesquad.codestagram.domain.Article;
 import codesquad.codestagram.domain.Reply;
 import codesquad.codestagram.domain.User;
@@ -9,6 +10,10 @@ import codesquad.codestagram.exception.ArticleNotFoundException;
 import codesquad.codestagram.exception.UnauthorizedAccessException;
 import codesquad.codestagram.repository.ArticleRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +29,11 @@ public class ArticleService {
 
     public List<Article> findAllArticles() {
         return articleRepository.findAll();
+    }
+
+    public Page<Article> findArticlesByPage(int page) {
+        Pageable pageable = PageRequest.of(page, Constants.ARTICLE_PAGE_SIZE, Sort.by("createdAt").descending());
+        return articleRepository.findAll(pageable);
     }
 
     public List<Article> findArticlesByTitle(String title) {
